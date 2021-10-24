@@ -33,19 +33,7 @@ class ReadPHD:
                 return start
 
     def __mat_to_list(self, ind):
-        _str_Counts = int((int(self.__file_content[ind + 1].split()[0])) / 5)
-        _lst_rtrn = []
-        for i in range(_str_Counts):
-            s = self.__file_content[ind + i + 2]
-            if s.find('#') != -1 or s.rstrip() == '' or s == 'STOP\n':
-                return _lst_rtrn
-            lst = list(map(int, s.split()))
-            lst.pop(0)
-            _lst_rtrn += lst
-
-    def __test(self, ind):
-
-        return [int(counts) for i in range(ind+2, self.__end_block_search(ind+1))
+        return [int(counts) for i in range(ind + 2, self.__end_block_search(ind + 1))
                 for counts in [self.__file_content[i].split()[j]
                                for j in range(len(self.__file_content[i].split())) if j != 0]]
 
@@ -241,7 +229,7 @@ class ReadPHD:
         if self.__file_content.count('#g_Spectrum\n'):
             ind = self.__file_content.index('#g_Spectrum\n')
             # return self.__mat_to_list(ind)
-            return self.__test(ind)
+            return self.__mat_to_list(ind)
         else:
             print(f'In file {self.__path} #g_Spectrum not found')
 
@@ -255,10 +243,9 @@ class ReadPHD:
     def get_histogram(self):
         if self.__file_content.count('#Histogram\n'):
             ind = self.__file_content.index('#Histogram\n')
-            print(f'#g_Energy index = {ind}')
             parse = self.__file_content[ind+1].split()
-            print(parse)
-            matrix = [list(map(int, self.__file_content[ind+i+2].split())) for i in range(256)]
+            matrix = [list(map(int, self.__file_content[ind+i+2].split())) for i in range(int(parse[0]))
+                      if self.__file_content[ind+i+2]]
             return matrix
         else:
             print(f'In file {self.__path} #Histogram not found')
@@ -272,26 +259,28 @@ def safe_data(name, *args):
     _file.close()
 
 
-spike = ReadPHD("E:/GitReps/PHDReader/MIX/SAMPLE/SAMPLE2020090419185213.PHD")
-a = spike.get_spectrum_g()
-print(a)
+def main():
+    spike = ReadPHD("E:/GitReps/PHDReader/MIX/SAMPLE/SAMPLE2020090419185213.PHD")
+    a = spike.get_histogram()
+    plot_histogram(a)
 
-# for file in os.listdir("E:/Work/SAMPLEs 2021/Blue"):
-#     temp = ReadPHD("E:/Work/SAMPLEs 2021/Blue/" + file)
-#     processing = temp.get_processing()
-#     collection = temp.get_collection()
-#     if processing is not None and temp.get_spectrum_qualifier() == 'FULL':
-#         safe_data('Blue', collection[0], '\t', processing[0][0], '\n')
-#
-# for file in os.listdir("E:/Work/SAMPLEs 2021/Red"):
-#     temp = ReadPHD("E:/Work/SAMPLEs 2021/Red/" + file)
-#     processing = temp.get_processing()
-#     collection = temp.get_collection()
-#     if processing is not None and temp.get_spectrum_qualifier() == 'FULL':
-#         safe_data('Red', collection[0], '\t', processing[0][0], '\n')
+    # for file in os.listdir("E:/Work/Phase A/Blue/SAMPLE"):
+    #     temp = ReadPHD("E:/Work/Phase A/Blue/SAMPLE/" + file)
+    #     collection = temp.get_collection()
+    #     if temp.get_spectrum_qualifier() == 'FULL':
+    #         safe_data('Blue', collection[0], '\t', collection[4], '\n')
+    #
+    # for file in os.listdir("E:/Work/Phase A/Red/SAMPLE"):
+    #     temp = ReadPHD("E:/Work/Phase A/Red/SAMPLE/" + file)
+    #     collection = temp.get_collection()
+    #     if temp.get_spectrum_qualifier() == 'FULL':
+    #         safe_data('Red', collection[0], '\t', collection[4], '\n')
+
+    # a = spike.get_data_type()
+    # print(a)
+    # str = spike.getTransmitDateTime().rstrip()
+    # date_obj = datetime.datetime.strptime(str, '%Y/%m/%d %H:%M:%S.%f')
 
 
-# a = spike.get_data_type()
-# print(a)
-# str = spike.getTransmitDateTime().rstrip()
-# date_obj = datetime.datetime.strptime(str, '%Y/%m/%d %H:%M:%S.%f')
+if __name__ == '__main__':
+    main()
