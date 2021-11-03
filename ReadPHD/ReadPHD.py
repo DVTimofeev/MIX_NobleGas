@@ -259,22 +259,33 @@ def safe_data(name, *args):
     _file.close()
 
 
-def main():
-    spike = ReadPHD("E:/GitReps/PHDReader/MIX/SAMPLE/SAMPLE2020090419185213.PHD")
-    a = spike.get_histogram()
-    plot_histogram(a)
+def process_files():
+    #E:/Work/MIX_Files/Phase A/Red/SAMPLE
+    # for file in os.listdir("E:/Work/MIX_Files/2020 01-04/Blue"):
+    #     temp = ReadPHD("E:/Work/MIX_Files/2020 01-04/Blue/" + file)
+    #     collection = temp.get_collection()
+    #     if temp.get_spectrum_qualifier() == 'FULL':
+    #         safe_data('Blue1', collection[0], '\t', collection[4], '\n')
+    path = "E:/Work/MIX_Files/Phase A/Red/SAMPLE"
+    for file in os.listdir(path):
+        temp = ReadPHD(path + '/' + file)
+        collection = temp.get_collection()
+        msg_id = temp.get_msg_id()
+        srid = temp.get_srid()
+        processing = temp.get_processing()
+        # if temp.get_spectrum_qualifier() == 'FULL':
+        if '2020/05/04' < collection[0] < '2020/05/10':
+            safe_data('Red2', collection[0], '\t', collection[4], '\t', msg_id, '\t', processing[0][0], '\t', srid)
 
-    # for file in os.listdir("E:/Work/Phase A/Blue/SAMPLE"):
-    #     temp = ReadPHD("E:/Work/Phase A/Blue/SAMPLE/" + file)
-    #     collection = temp.get_collection()
-    #     if temp.get_spectrum_qualifier() == 'FULL':
-    #         safe_data('Blue', collection[0], '\t', collection[4], '\n')
-    #
-    # for file in os.listdir("E:/Work/Phase A/Red/SAMPLE"):
-    #     temp = ReadPHD("E:/Work/Phase A/Red/SAMPLE/" + file)
-    #     collection = temp.get_collection()
-    #     if temp.get_spectrum_qualifier() == 'FULL':
-    #         safe_data('Red', collection[0], '\t', collection[4], '\n')
+
+def main():
+    # spike = ReadPHD("E:/GitReps/PHDReader/MIX/SAMPLE/SAMPLE2020090419185213.PHD")
+    # collection = spike.get_collection()
+    # print(collection[0] > '2020/08/04')
+    # a = spike.get_histogram()
+    # plot_histogram(a)
+    process_files()
+
 
     # a = spike.get_data_type()
     # print(a)
