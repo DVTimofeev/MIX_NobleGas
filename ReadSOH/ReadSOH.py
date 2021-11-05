@@ -31,17 +31,25 @@ def save_list_in_file(data_list, name, ext):
 
 def main():
     soh1 = ReadSOH("F:/Work/MIX_Files/MIX_09102019_22062020.csv")
-    save_list_in_file(soh1.search_param("a4_fs1"), 'a4_fs1', 'csv')
-    save_list_in_file(soh1.search_param("a4_fs2"), 'a4_fs2', 'csv')
-    save_list_in_file(soh1.search_param("a4_fs3"), 'a4_fs3', 'csv')
-    save_list_in_file(soh1.search_param("a4_fs4"), 'a4_fs4', 'csv')
+    # save_list_in_file(soh1.search_param("a4_fs1"), 'sec/date', 'csv')
+    # save_list_in_file(soh1.search_param("a4_fs2"), 'sec/a4_fs2', 'csv')
+    # save_list_in_file(soh1.search_param("a4_fs3"), 'sec/a4_fs3', 'csv')
+    # save_list_in_file(soh1.search_param("a4_fs4"), 'sec/a4_fs4', 'csv')
+    # a = soh1.search_param("a4_fs1")[1].replace('\"', '')
+    # date_l_old = [b.replace('\"', '').split(';')[0].split('.') for b in soh1.search_param("a4_fs1")]
+    # for a in date_l_old:
+    #     a[0], a[1] = a[1], a[0]
+    #
+    # date_l_new = [s[0] + '.' + s[1] + '.' + s[2] + '\n' for s in c]
+    open_file = open('MIX/flow_data.txt')
+    flow_list = open_file.readlines()
+    flow_list = [s.split(';') for s in flow_list]
+    result = []
+    for l in flow_list:
+        result.append(l[0]+'\n')
+        result.append(l[1])
 
-    # print([soh1.search_param("a4_fs2")[i] for i in range(5)])
-    # save_file.close()
-    # soh1.print()
-    # l = 'a1aw'.replace('1', 'A').replace('w', 'B')
-    # print(l)
-    # print('"05.01.2020 00:00:55";"PRESSURE";"a4_ps1";"1.420"\n'.count('a4_ps1'))
+    save_list_in_file(result, 'flowlist2', 'csv')
 
 
 if __name__ == '__main__':
